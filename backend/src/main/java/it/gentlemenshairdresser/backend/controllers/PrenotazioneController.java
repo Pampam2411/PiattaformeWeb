@@ -3,6 +3,7 @@ package it.gentlemenshairdresser.backend.controllers;
 import it.gentlemenshairdresser.backend.entities.Prenotazione;
 import it.gentlemenshairdresser.backend.services.PrenotazioneService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,17 @@ public class PrenotazioneController {
     }
 
     @PostMapping
-    public Prenotazione createPrenotazione(@RequestBody Prenotazione prenotazione){ return prenotazioneService.savePrenotazione(prenotazione);}
+    public ResponseEntity<?> createPrenotazione(@RequestBody Prenotazione prenotazione){
+        try{
+            Prenotazione nuovaPrenotazione=prenotazioneService.createPrenotazione(prenotazione);
+            return new ResponseEntity<>(nuovaPrenotazione, HttpStatus.CREATED);
+        } catch (IllegalStateException e) {
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.CONFLICT);
+        }catch (IllegalArgumentException e){
+            return new ResponseEntity<>(e.getMessage(),HttpStatus.BAD_REQUEST);
+        }
+
+    }
 
     @PutMapping("/{id}")
     public ResponseEntity<Prenotazione> updatePrenotazione(@PathVariable Long id, @RequestBody Prenotazione prenotazione){
