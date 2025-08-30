@@ -23,8 +23,8 @@ public class Prenotazione {
     private LocalDateTime dataOraFine;
 
     @ManyToOne
-    @JoinColumn(name = "id_cliente",nullable = false)
-    private Cliente cliente;
+    @JoinColumn(name = "id_utente",nullable = false)
+    private Utente utente;
 
     @ManyToOne
     @JoinColumn(name = "id_barbiere",nullable = false)

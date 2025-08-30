@@ -4,6 +4,7 @@ import it.gentlemenshairdresser.backend.entities.Barbiere;
 import it.gentlemenshairdresser.backend.services.BarbiereService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -29,9 +30,11 @@ public class BarbiereController {
     }
 
     @PostMapping
+    @PreAuthorize("hasRole('AMMINISTRATORE')")
     public Barbiere createBarbiere(@RequestBody Barbiere barbiere){ return barbiereService.saveBarbier(barbiere);}
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('AMMINISTRATORE')")
     public ResponseEntity<Barbiere> updateBarbiere(@PathVariable Long id, @RequestBody Barbiere barbiere){
         Optional<Barbiere> barbiereOptional=barbiereService.findBarbierById(id);
         if(barbiereOptional.isPresent()){
@@ -43,6 +46,7 @@ public class BarbiereController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('AMMINISTRATORE')")
     public ResponseEntity<Void> deleteBarbiereById(@PathVariable Long id){
         if(barbiereService.findBarbierById(id).isPresent()) {
             barbiereService.deleteBarbierById(id);

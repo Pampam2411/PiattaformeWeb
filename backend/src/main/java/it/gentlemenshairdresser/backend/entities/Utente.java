@@ -3,11 +3,13 @@ package it.gentlemenshairdresser.backend.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.List;
+
 @Entity
-@Table(name = "clienti")
+@Table(name = "utenti")
 @Getter
 @Setter
-public class Cliente {
+public class Utente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,5 +21,10 @@ public class Cliente {
     private String email;
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    private Ruolo ruolo;
+
+    @OneToMany(mappedBy = "utente")
+    private List<Prenotazione> prenotazione;
 
 }

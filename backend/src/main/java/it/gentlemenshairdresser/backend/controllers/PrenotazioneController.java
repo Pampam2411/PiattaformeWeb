@@ -45,7 +45,7 @@ public class PrenotazioneController {
         Optional<Prenotazione> prenotazioneOptional=prenotazioneService.findPrenotazioneById(id);
         if(prenotazioneOptional.isPresent()){
             Prenotazione prenotazioneEsistente=prenotazioneOptional.get();
-            prenotazioneEsistente.setCliente(prenotazione.getCliente());
+            prenotazioneEsistente.setUtente(prenotazione.getUtente());
             prenotazioneEsistente.setBarbiere(prenotazione.getBarbiere());
             prenotazioneEsistente.setServizi(prenotazione.getServizi());
             prenotazioneEsistente.setDataOraInizio(prenotazione.getDataOraInizio());

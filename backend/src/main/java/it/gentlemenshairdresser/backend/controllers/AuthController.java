@@ -1,9 +1,9 @@
 package it.gentlemenshairdresser.backend.controllers;
 
 import it.gentlemenshairdresser.backend.dto.LoginRequest;
-import it.gentlemenshairdresser.backend.entities.Cliente;
+import it.gentlemenshairdresser.backend.entities.Utente;
 import it.gentlemenshairdresser.backend.security.JwtUtil;
-import it.gentlemenshairdresser.backend.services.ClienteService;
+import it.gentlemenshairdresser.backend.services.UtenteService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,7 +20,7 @@ import java.util.Optional;
 public class AuthController {
 
     @Autowired
-    private ClienteService clienteService;
+    private UtenteService utenteService;
 
     @Autowired
     private JwtUtil jwtUtili;
@@ -29,11 +29,11 @@ public class AuthController {
     private PasswordEncoder passwordEncoder;
 
     @PostMapping("/register")
-    public ResponseEntity<?> registerUser(@RequestBody Cliente cliente){
+    public ResponseEntity<?> registerUser(@RequestBody Utente utente){
         try{
-            Cliente nuovoCliente=clienteService.registerNewCliente(cliente);
-            nuovoCliente.setPassword(null);
-            return new ResponseEntity<>(nuovoCliente, HttpStatus.CREATED);
+            Utente nuovoUtente = utenteService.registerNewUtente(utente);
+            nuovoUtente.setPassword(null);
+            return new ResponseEntity<>(nuovoUtente, HttpStatus.CREATED);
         }catch (IllegalStateException e) {
         return new ResponseEntity<>(e.getMessage(), HttpStatus.CONFLICT);
         }
@@ -41,15 +41,15 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?>loginUser(@RequestBody LoginRequest loginRequest){
-        Optional<Cliente> clienteOptional=clienteService.findClienteByEmail(loginRequest.getEmail());
+        Optional<Utente> clienteOptional= utenteService.findUtenteByEmail(loginRequest.getEmail());
 
         if(clienteOptional.isEmpty())
             return new ResponseEntity<>("Credenziali non valide.", HttpStatus.UNAUTHORIZED);
 
-        Cliente cliente=clienteOptional.get();
+        Utente utente =clienteOptional.get();
 
-        if(passwordEncoder.matches(loginRequest.getPassword(),cliente.getPassword())){
-            String token=jwtUtili.generateToken(cliente);
+        if(passwordEncoder.matches(loginRequest.getPassword(), utente.getPassword())){
+            String token=jwtUtili.generateToken(utente);
             return ResponseEntity.ok(token);
         }
         else return new ResponseEntity<>("Credenziali non valide.", HttpStatus.UNAUTHORIZED);
